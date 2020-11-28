@@ -5,7 +5,7 @@ package second;
 option go_package = "proto;second";
 
 service Second {
-	rpc Call(Request) returns (Response) {}
+	rpc Query(Request) returns (Response) {}
 	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
 	rpc PingPong(stream Ping) returns (stream Pong) {}
 }

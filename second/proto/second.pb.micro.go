@@ -42,7 +42,7 @@ func NewSecondEndpoints() []*api.Endpoint {
 // Client API for Second service
 
 type SecondService interface {
-	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	Query(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Second_StreamService, error)
 	PingPong(ctx context.Context, opts ...client.CallOption) (Second_PingPongService, error)
 }
@@ -59,8 +59,8 @@ func NewSecondService(name string, c client.Client) SecondService {
 	}
 }
 
-func (c *secondService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
-	req := c.c.NewRequest(c.name, "Second.Call", in)
+func (c *secondService) Query(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Second.Query", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -172,14 +172,14 @@ func (x *secondServicePingPong) Recv() (*Pong, error) {
 // Server API for Second service
 
 type SecondHandler interface {
-	Call(context.Context, *Request, *Response) error
+	Query(context.Context, *Request, *Response) error
 	Stream(context.Context, *StreamingRequest, Second_StreamStream) error
 	PingPong(context.Context, Second_PingPongStream) error
 }
 
 func RegisterSecondHandler(s server.Server, hdlr SecondHandler, opts ...server.HandlerOption) error {
 	type second interface {
-		Call(ctx context.Context, in *Request, out *Response) error
+		Query(ctx context.Context, in *Request, out *Response) error
 		Stream(ctx context.Context, stream server.Stream) error
 		PingPong(ctx context.Context, stream server.Stream) error
 	}
@@ -194,8 +194,8 @@ type secondHandler struct {
 	SecondHandler
 }
 
-func (h *secondHandler) Call(ctx context.Context, in *Request, out *Response) error {
-	return h.SecondHandler.Call(ctx, in, out)
+func (h *secondHandler) Query(ctx context.Context, in *Request, out *Response) error {
+	return h.SecondHandler.Query(ctx, in, out)
 }
 
 func (h *secondHandler) Stream(ctx context.Context, stream server.Stream) error {
